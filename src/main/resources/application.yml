@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: crypto-gap-test
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+
+# Layer 1 — config file crypto settings
+# CBOMkit MISSES all of these — it doesn't parse YAML at all
+server:
+  ssl:
+    key-store-type: JKS        # deprecated, should be PKCS12
+    protocol: TLS              # not pinned to TLSv1.3
+
+jwt:
+  secret: myWeakSecret123      # hardcoded weak secret
+  expiration: 86400000         # 24 hours — too long for payment systems
