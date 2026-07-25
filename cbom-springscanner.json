@@ -1,0 +1,191 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:5f2e24d4-af2f-4cbb-8ca0-ef6fa16aa6d4",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-07-23T05:31:21.938852Z",
+    "tools": [
+      {
+        "vendor": "IIT Jodhpur",
+        "name": "SpringCryptoScanner",
+        "version": "2.0",
+        "description": "Spring Security-aware cryptographic asset discovery tool. Extends CBOMkit to cover Spring Security beans (Layer 3), JPA @Convert annotations (Layer 2), and YAML/pom.xml config (Layer 1)."
+      }
+    ],
+    "component": {
+      "type": "application",
+      "name": "crypto-gap-test",
+      "version": "1.0"
+    }
+  },
+  "components": [
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L3-SpringSecurityBean/BCrypt-0",
+      "name": "BCrypt",
+      "description": "BCryptPasswordEncoder strength=4 (minimum safe value is 10). At strength=4, 2^4=16 iterations — brute-force feasible on modern hardware.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "kdf",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 5
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L3-SpringSecurityBean"},
+        {"name": "detection-rule",     "value": "WEAK_BCRYPT_COST_FACTOR"},
+        {"name": "severity",           "value": "HIGH"},
+        {"name": "quantum-status",     "value": "quantumSafe"},
+        {"name": "source-file",        "value": "SecurityConfig.java"},
+        {"name": "source-line",        "value": "17"},
+        {"name": "pq-replacement",     "value": "See NIST PQC standards"},
+        {"name": "cbomkit-detects",    "value": "false"}
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L4-RawJCA/SHA_1-1",
+      "name": "SHA-1",
+      "description": "Classically broken algorithm 'SHA-1'. SHAttered attack (2017) produced SHA-1 collision on classical hardware. Replace with: SHA-256 or SHA-3 (NIST FIPS 180-4 / FIPS 202)",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "hash",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L4-RawJCA"},
+        {"name": "detection-rule",     "value": "CLASSICALLY_BROKEN_ALGORITHM"},
+        {"name": "severity",           "value": "HIGH"},
+        {"name": "quantum-status",     "value": "classicallyBroken"},
+        {"name": "source-file",        "value": "HashService.java"},
+        {"name": "source-line",        "value": "16"},
+        {"name": "pq-replacement",     "value": "SHA-256 or SHA-3 (NIST FIPS 180-4 / FIPS 202)"},
+        {"name": "cbomkit-detects",    "value": "true"}
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L2-JPAConverter/unknown-2",
+      "name": "unknown",
+      "description": "@Convert annotation on field 'accountNumber' — field-level encryption via AttributeConverter. Audit converter class: verify algorithm is not AES/ECB, key is not hardcoded, key size is AES-256 minimum. CBOMkit cannot trace this annotation to its implementation.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "unknown",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L2-JPAConverter"},
+        {"name": "detection-rule",     "value": "FIELD_LEVEL_ENCRYPTION_DETECTED"},
+        {"name": "severity",           "value": "MEDIUM"},
+        {"name": "quantum-status",     "value": "unknown"},
+        {"name": "source-file",        "value": "Account.java"},
+        {"name": "source-line",        "value": "18"},
+        {"name": "pq-replacement",     "value": "See NIST PQC standards"},
+        {"name": "cbomkit-detects",    "value": "false"}
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L4-RawJCA/AES_ECB-3",
+      "name": "AES-ECB",
+      "description": "ECB mode in cipher specification 'AES/ECB/PKCS5Padding'. ECB is deterministic: identical plaintext blocks → identical ciphertext. Pattern analysis attacks are trivial. Replace with AES/GCM/NoPadding.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "unknown",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 5
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L4-RawJCA"},
+        {"name": "detection-rule",     "value": "INSECURE_CIPHER_MODE_ECB"},
+        {"name": "severity",           "value": "CRITICAL"},
+        {"name": "quantum-status",     "value": "quantumSafe"},
+        {"name": "source-file",        "value": "AccountNumberEncryptor.java"},
+        {"name": "source-line",        "value": "17"},
+        {"name": "pq-replacement",     "value": "See NIST PQC standards"},
+        {"name": "cbomkit-detects",    "value": "true"}
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L1-ConfigFile/JKS-4",
+      "name": "JKS",
+      "description": "JKS keystore type is deprecated since Java 9. JKS uses proprietary format with weaker protections. Migrate to PKCS12 (key-store-type: PKCS12).",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "unknown",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L1-ConfigFile"},
+        {"name": "detection-rule",     "value": "DEPRECATED_KEYSTORE_TYPE"},
+        {"name": "severity",           "value": "MEDIUM"},
+        {"name": "quantum-status",     "value": "unknown"},
+        {"name": "source-file",        "value": "application.yml"},
+        {"name": "source-line",        "value": "23"},
+        {"name": "pq-replacement",     "value": "See NIST PQC standards"},
+        {"name": "cbomkit-detects",    "value": "false"}
+      ]
+    },
+    {
+      "type": "cryptographic-asset",
+      "bom-ref": "crypto/L1-ConfigFile/HMAC_secret-5",
+      "name": "HMAC-secret",
+      "description": "Short secret value detected (< 32 chars). Cryptographic secrets should be minimum 256 bits (32 bytes) and stored in a secrets manager, not in configuration files.",
+      "cryptoProperties": {
+        "assetType": "algorithm",
+        "algorithmProperties": {
+          "primitive": "unknown",
+          "executionEnvironment": "software-plain-ram",
+          "nistQuantumSecurityLevel": 0
+        },
+        "oid": ""
+      },
+      "properties": [
+        {"name": "spring-layer",       "value": "L1-ConfigFile"},
+        {"name": "detection-rule",     "value": "WEAK_SECRET_IN_CONFIG"},
+        {"name": "severity",           "value": "CRITICAL"},
+        {"name": "quantum-status",     "value": "unknown"},
+        {"name": "source-file",        "value": "application.yml"},
+        {"name": "source-line",        "value": "26"},
+        {"name": "pq-replacement",     "value": "See NIST PQC standards"},
+        {"name": "cbomkit-detects",    "value": "false"}
+      ]
+    }
+  ],
+  "vulnerabilities": [],
+  "extensions": [
+    {
+      "namespace": "https://github.com/KandasamyShunmugaraj/crypto-gap-test",
+      "springCryptoScannerSummary": {
+        "totalFindings": 6,
+        "layer1Findings": 2,
+        "layer2Findings": 1,
+        "layer3Findings": 1,
+        "layer4Findings": 2,
+        "quantumVulnerable": 0,
+        "classicallyBroken": 1,
+        "cbomkitWouldMiss": 4,
+        "note": "Layers 1-3 findings are invisible to CBOMkit 2.2.0. This CBOM extends CBOMkit coverage to Spring Security framework layer."
+      }
+    }
+  ]
+}

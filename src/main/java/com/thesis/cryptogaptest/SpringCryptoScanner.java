@@ -43,6 +43,8 @@ public class SpringCryptoScanner {
     private static final Map<String, String> PQ_REPLACEMENT  = new HashMap<>();
     private static final Map<String, String> PRIMITIVE_TYPE  = new HashMap<>();
 
+    public List<Finding> getFindings() { return findings; }
+
     static {
         // ── NOT QUANTUM SAFE (Shor's algorithm) ──────────────────────────────
         QUANTUM_STATUS.put("RSA",        "notQuantumSafe");

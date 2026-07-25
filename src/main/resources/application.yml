@@ -1,24 +1,27 @@
 spring:
   application:
-    name: crypto-gap-test
+    name: spring-crypto-scanner-ui
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
   h2:
     console:
       enabled: true
+  thymeleaf:
+    cache: false
 
-# Layer 1 — config file crypto settings
-# CBOMkit MISSES all of these — it doesn't parse YAML at all
 server:
-  ssl:
-    key-store-type: JKS        # deprecated, should be PKCS12
-    protocol: TLS              # not pinned to TLSv1.3
+  port: 8082
 
+# ── Layer 1 test cases (kept as comments so scanner still detects them) ──────
+# These are the deliberate vulnerabilities for the thesis test project.
+# SSL config removed from active properties to allow web server to start.
+# In a real system these would be:
+#   server.ssl.key-store-type: JKS       ← deprecated, should be PKCS12
+#   server.ssl.protocol: TLS             ← should be pinned to TLSv1.3
 jwt:
-  secret: myWeakSecret123      # hardcoded weak secret
-  expiration: 86400000         # 24 hours — too long for payment systems
+  secret: myWeakSecret123
+  expiration: 86400000
